@@ -1,0 +1,60 @@
+class Trie{
+    int pc;
+    boolean word;
+    Trie[] kids;
+    Trie(){
+        this.pc=0;
+        this.word=false;
+        this.kids= new Trie[26];
+    }
+    public void add(String str){
+        if(str.isEmpty()){
+            this.word=true;
+            return;
+        }
+        int index=str.charAt(0)-'a';
+        if(this.kids[index]==null){
+            this.kids[index]= new Trie();
+            this.kids[index].pc=1;
+        }else{
+            this.kids[index].pc+=1;
+        }
+        
+         this.kids[index].add(str.substring(1));
+    }
+    
+    public  int prefix(Trie root,int l,int lp){
+        int index=-1;
+        for(int i=0;i<26;i++){
+            if(root.kids[i]!=null && root.kids[i].pc==l){
+                lp+=1;
+                index=i;
+            }
+        }
+        if(index==-1){
+            return lp;
+        }
+        return prefix(root.kids[index],l,lp);
+        
+    }
+}
+
+class Solution {
+    
+    public String longestCommonPrefix(String[] strs) {
+        int l=strs.length;
+        StringBuilder res= new StringBuilder();
+        Trie root = new Trie();
+        for(String s:strs){
+            root.add(s);
+        }
+        String s=strs[0];
+        int counter=root.prefix(root,l,0);
+        for(int i=0;i<counter;i++){
+            res.append(s.charAt(i));
+        }
+        return res.toString();
+        
+        
+    }
+}
