@@ -1,0 +1,74 @@
+class Solution 
+{
+    ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+    
+    public boolean canFinish(int numCourses, int[][] prerequisites) 
+    {
+        for(int i = 0; i < numCourses; i++)
+        {
+            graph.add(new ArrayList<>());
+        }
+        
+        for(int arr[] : prerequisites)
+        {
+            int a = arr[0];
+            
+            int b = arr[1];
+            
+            graph.get(a).add(b);
+        }
+        
+        boolean vis[] = new boolean[numCourses];
+        
+        boolean completed[] = new boolean[numCourses];
+        
+        for(int i = 0 ; i < numCourses; i++) 
+        {
+             if(dfsCyclic(i, graph, vis, completed))
+             {
+                return false;
+             }
+            
+             completed[i] = true;
+           
+        }
+        
+        return true;
+    }
+    
+    
+    public boolean dfsCyclic(int course, ArrayList<ArrayList<Integer>> graph, boolean vis[], boolean completed[])
+    {
+        if(completed[course])
+        {
+            return false;
+        }
+        
+        if(vis[course])
+        {
+            return true;
+        }
+        
+        vis[course] = true;
+        
+        boolean res = false;
+        
+        ArrayList<Integer> neb = graph.get(course);
+        
+        for(int a : neb)
+        {
+            res = dfsCyclic(a, graph, vis, completed);
+                
+            if(res)
+            {
+                return res;
+            }
+            
+        }
+        
+        vis[course] = false;
+        
+        return false;
+    }
+    
+}
